@@ -59,6 +59,14 @@
   flex-direction: column;
 }
 
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  bottom: 20px;
+}
+
 .queryAndResponse:not(:last-child) {
   border: 0 solid #e5e7eb;
   border-bottom-width: 1px;
@@ -73,7 +81,7 @@
 
 .clearButton {
   margin-top: 5px;
-
+  width: fit-content;;
 }
 
 .response {

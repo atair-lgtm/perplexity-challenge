@@ -14,7 +14,7 @@ export default function ChatMessages({
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [queries.length]);
+  }, [queries]);
 
   return (
     <div className={styles.chatArea}>
@@ -25,7 +25,7 @@ export default function ChatMessages({
           </div>
 
           {query.response && (
-            <div className={styles.response}>
+            <div className={styles.response} ref={bottomRef}>
               <MarkdownRenderer
                 content={query.response}
                 onEntityLinkClick={(content) => fetchAnswer(content)}

@@ -10,12 +10,12 @@ type Query = {
 };
 
 export default async function handler(req: Request) {
-  const { prevHistory, currentPrompt } = (await req.json()) as {
+  const { prevHistory, prompt } = (await req.json()) as {
     prevHistory: Query[];
-    currentPrompt: string;
+    prompt: string;
   };
 
-  const stream = await OpenAIStream({ prompt: currentPrompt, prevHistory });
+  const stream = await OpenAIStream({ prompt, prevHistory });
 
   return new Response(stream);
 }

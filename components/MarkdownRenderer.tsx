@@ -30,21 +30,23 @@ export default function MarkdownRenderer({
         return renderedWords;
       });
 
-      return processedChildren;
+      return <p>{processedChildren}</p>;
     },
     li: ({ children }: { children: React.ReactNode[] }) => {
-      const childrenToProcess =
-        children && children.filter((el) => el !== "\n");
-      const result =
-        childrenToProcess &&
-        childrenToProcess.map((child) => {
-          if (typeof child === "object") {
-            return child;
-          }
-          return _renderTextWithEntityLinks(child as string);
-        });
+      if (children === undefined) {
+        return;
+      }
 
-      return <li>{result}</li>;
+      const childrenToProcess = children.filter((el) => el !== "\n");
+
+      const processedChildren = childrenToProcess.map((child) => {
+        if (typeof child === "object") {
+          return child;
+        }
+        return _renderTextWithEntityLinks(child as string);
+      });
+
+      return <li>{processedChildren}</li>;
     },
     code: ({
       inline,

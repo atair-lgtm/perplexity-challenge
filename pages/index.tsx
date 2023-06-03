@@ -1,4 +1,3 @@
-import MarkdownRenderer from "@/components/MarkdownRenderer";
 import UserTextArea from "@/components/UserTextArea";
 import styles from "@/styles/App.module.css";
 import { useState } from "react";
@@ -22,7 +21,7 @@ export default function App() {
       },
       body: JSON.stringify({
         prevHistory: queries,
-        currentPrompt: userQuery,
+        prompt: userQuery,
       }),
     });
 
@@ -46,6 +45,11 @@ export default function App() {
     setIsLoading(false);
   };
 
+  const _onClickClear = () => {
+    setQueries([]);
+    setIsLoading(false);
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.center}>
@@ -56,17 +60,21 @@ export default function App() {
           fetchAnswer={(query) => fetchAnswer(query)}
         />
 
-        <UserTextArea
-          fetchAnswer={(query) => fetchAnswer(query)}
-          placeholder={queries.length > 0 ? "Ask follow-up" : "Ask anything..."}
-          isDisabled={isLoading}
-        />
+        <div className={queries.length > 0 ? styles.footer : ""}>
+          <UserTextArea
+            fetchAnswer={(query) => fetchAnswer(query)}
+            placeholder={
+              queries.length > 0 ? "Ask follow-up" : "Ask anything..."
+            }
+            isDisabled={isLoading}
+          />
 
-        {queries.length > 0 ? (
-          <button className={styles.clearButton} onClick={() => setQueries([])}>
-            {"Clear chat"}
-          </button>
-        ) : null}
+          {queries.length > 0 ? (
+            <button className={styles.clearButton} onClick={_onClickClear}>
+              {"Clear chat"}
+            </button>
+          ) : null}
+        </div>
       </div>
     </main>
   );
