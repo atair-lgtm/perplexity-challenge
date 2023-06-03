@@ -2,9 +2,9 @@ import ReactMarkdown from "react-markdown";
 import React from "react";
 import EntityLink from "./EntityLink";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-// import * as styles from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from "@/styles/App.module.css";
 
+// REGEX for capturing multiple adjacent capitalized words first then attempts to capture single capitalized word
 const capitalizedWordRegex =
   /(\b[A-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*(?:\s+[A-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*)+\b)|(\b[A-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*\b)/g;
 
@@ -24,7 +24,8 @@ export default function MarkdownRenderer({
 
         const text = child;
 
-        const renderedWords = text && _renderTextWithEntityLinksRegex(text);
+        const renderedWords =
+          text && _renderTextWithEntityLinks(text as string);
 
         return renderedWords;
       });
@@ -40,7 +41,7 @@ export default function MarkdownRenderer({
           if (typeof child === "object") {
             return child;
           }
-          return _renderTextWithEntityLinksRegex(child as string);
+          return _renderTextWithEntityLinks(child as string);
         });
 
       return <li>{result}</li>;
@@ -68,12 +69,10 @@ export default function MarkdownRenderer({
     },
   };
 
-  const _renderTextWithEntityLinksRegex = (textOrObject: string | Object) => {
-    let textToProcess = textOrObject;
+  const _renderTextWithEntityLinks = (text: string) => {
+    const splitText = text.split(capitalizedWordRegex);
 
-    const splitText = (textToProcess as string).split(capitalizedWordRegex);
-
-    const updatedText = splitText.map((word, index) => {
+    const textWithEntityLinks = splitText.map((word, index) => {
       if (word && word.match(capitalizedWordRegex)) {
         return (
           <EntityLink
@@ -86,7 +85,7 @@ export default function MarkdownRenderer({
       return word;
     });
 
-    return updatedText;
+    return textWithEntityLinks;
   };
 
   return (

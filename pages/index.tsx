@@ -10,23 +10,17 @@ type Query = {
 
 export default function App() {
   const [queries, setQueries] = useState<Query[]>([]);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [queries]);
-
-  const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  };
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [queries.length]);
 
   const fetchAnswer = async (userQuery: string) => {
     const newQuery: Query = { userQuery, response: null };
     setQueries((prevQueries) => [...prevQueries, newQuery]);
-
+    setIsLoading(true);
     const response = await fetch("/api/search", {
       method: "POST",
       headers: {
@@ -53,6 +47,7 @@ export default function App() {
       newQuery.response = (newQuery.response ?? "") + chunkValue;
       setQueries((prevQueries) => [...prevQueries]);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -60,18 +55,14 @@ export default function App() {
       <div className={styles.center}>
         <h1>Perplexity</h1>
 
-        <UserTextArea fetchAnswer={(query) => fetchAnswer(query)} />
-        {queries.length > 0 ? (
-          <button className={styles.clearButton} onClick={() => setQueries([])}>
-            {"Clear chat"}
-          </button>
-        ) : null}
-
-        <div className={styles.chatArea} ref={chatContainerRef}>
+        <div className={styles.chatArea}>
           {queries.map((query, index) => (
             <div key={index} className={styles.queryAndResponse}>
-              <div className={styles.userQuery}>
-                <h1>{query.userQuery}</h1>
+              <div
+                className={styles.userQuery}
+                ref={index === queries.length - 1 ? bottomRef : null}
+              >
+                <h3>{query.userQuery}</h3>
               </div>
 
               {query.response && (
@@ -86,6 +77,17 @@ export default function App() {
             </div>
           ))}
         </div>
+
+        <UserTextArea
+          fetchAnswer={(query) => fetchAnswer(query)}
+          isDisabled={isLoading}
+        />
+
+        {queries.length > 0 ? (
+          <button className={styles.clearButton} onClick={() => setQueries([])}>
+            {"Clear chat"}
+          </button>
+        ) : null}
       </div>
     </main>
   );

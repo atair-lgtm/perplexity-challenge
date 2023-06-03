@@ -3,8 +3,10 @@ import styles from "@/styles/App.module.css";
 
 const UserTextArea = ({
   fetchAnswer,
+  isDisabled,
 }: {
   fetchAnswer: (query: string) => void;
+  isDisabled: boolean;
 }) => {
   const _submitQuery = () => {
     fetchAnswer(userQuery);
@@ -23,6 +25,7 @@ const UserTextArea = ({
       <textarea
         className={styles.textarea}
         value={userQuery}
+        disabled={isDisabled}
         onChange={(e) => setUserQuery(e.target.value)}
         placeholder="Ask anything..."
         onKeyDown={_handleKeyDown}
