@@ -1,38 +1,34 @@
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import UserTextArea from "@/components/UserTextArea";
 import styles from "@/styles/App.module.css";
-import { useRef, useEffect, useState } from "react";
-
-type Query = {
-  userQuery: string;
-  response: string | null;
-};
+import { useState } from "react";
+import { Query } from "@/types/Query";
+import ChatMessages from "@/components/ChatMessages";
 
 export default function App() {
   const [queries, setQueries] = useState<Query[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [queries.length]);
 
   const fetchAnswer = async (userQuery: string) => {
     const newQuery: Query = { userQuery, response: null };
+
     setQueries((prevQueries) => [...prevQueries, newQuery]);
     setIsLoading(true);
+
     const response = await fetch("/api/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: userQuery,
+        prevHistory: queries,
+        currentPrompt: userQuery,
       }),
     });
 
     const data = response.body;
     if (!data) {
+      setQueries((prevQueries) => prevQueries.slice(0, -1));
       return;
     }
 
@@ -55,31 +51,14 @@ export default function App() {
       <div className={styles.center}>
         <h1>Perplexity</h1>
 
-        <div className={styles.chatArea}>
-          {queries.map((query, index) => (
-            <div key={index} className={styles.queryAndResponse}>
-              <div
-                className={styles.userQuery}
-                ref={index === queries.length - 1 ? bottomRef : null}
-              >
-                <h3>{query.userQuery}</h3>
-              </div>
-
-              {query.response && (
-                <div className={styles.response}>
-                  <MarkdownRenderer
-                    content={query.response}
-                    onEntityLinkClick={(content) => fetchAnswer(content)}
-                  />
-                </div>
-              )}
-              <hr />
-            </div>
-          ))}
-        </div>
+        <ChatMessages
+          queries={queries}
+          fetchAnswer={(query) => fetchAnswer(query)}
+        />
 
         <UserTextArea
           fetchAnswer={(query) => fetchAnswer(query)}
+          placeholder={queries.length > 0 ? "Ask follow-up" : "Ask anything..."}
           isDisabled={isLoading}
         />
 
