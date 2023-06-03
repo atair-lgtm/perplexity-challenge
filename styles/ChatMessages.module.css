@@ -1,0 +1,25 @@
+
+.chatMessages {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.queryAndResponse {
+  display: flex;
+  flex-direction: column;
+}
+
+.userQuery {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.response {
+  border-width: 0px;;
+  border-style: solid;
+  resize: none;
+  word-break: break-word;
+  animation: fadeIn 500ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}

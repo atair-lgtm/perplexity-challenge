@@ -2,7 +2,7 @@ import ReactMarkdown from "react-markdown";
 import React from "react";
 import EntityLink from "./EntityLink";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import styles from "@/styles/App.module.css";
+import styles from "@/styles/MarkdownRenderer.module.css";
 
 // REGEX for capturing multiple adjacent capitalized words first then attempts to capture single capitalized word
 const capitalizedWordRegex =
@@ -92,7 +92,7 @@ export default function MarkdownRenderer({
 
   return (
     //@ts-ignore
-    <ReactMarkdown components={components} className={styles.lineBreak}>
+    <ReactMarkdown components={components} className={styles.MarkdownRenderer}>
       {content}
     </ReactMarkdown>
   );

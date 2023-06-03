@@ -1,5 +1,5 @@
 import { KeyboardEvent, useState } from "react";
-import styles from "@/styles/App.module.css";
+import styles from "@/styles/UserTextArea.module.css";
 
 const UserTextArea = ({
   fetchAnswer,
@@ -23,7 +23,7 @@ const UserTextArea = ({
 
   const [userQuery, setUserQuery] = useState("");
   return (
-    <div className={styles.textAreaDiv}>
+    <div className={styles.userTextArea}>
       <textarea
         className={styles.textarea}
         value={userQuery}

@@ -1,5 +1,5 @@
 import { Query } from "@/types/Query";
-import styles from "@/styles/App.module.css";
+import styles from "@/styles/ChatMessages.module.css";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import { useRef, useEffect } from "react";
 
@@ -17,7 +17,7 @@ export default function ChatMessages({
   }, [queries]);
 
   return (
-    <div className={styles.chatArea}>
+    <div className={styles.chatMessages}>
       {queries.map((query, index) => (
         <div key={index} className={styles.queryAndResponse}>
           <div className={styles.userQuery} ref={bottomRef}>
