@@ -16,7 +16,7 @@ export default function MarkdownRenderer({
   onEntityLinkClick: (text: string) => void;
 }) {
   const components = {
-    p: ({ children }) => {
+    p: ({ children }: { children: React.ReactNode[] }) => {
       const processedChildren = children.map((child) => {
         if (typeof child === "object") {
           return child;
@@ -31,7 +31,7 @@ export default function MarkdownRenderer({
 
       return processedChildren;
     },
-    li: ({ children }) => {
+    li: ({ children }: { children: React.ReactNode[] }) => {
       const childrenToProcess =
         children && children.filter((el) => el !== "\n");
       const result =
@@ -40,12 +40,21 @@ export default function MarkdownRenderer({
           if (typeof child === "object") {
             return child;
           }
-          return _renderTextWithEntityLinksRegex(child);
+          return _renderTextWithEntityLinksRegex(child as string);
         });
 
       return <li>{result}</li>;
     },
-    code: ({ node, inline, className, children, ...props }) => {
+    code: ({
+      inline,
+      className,
+      children,
+      ...props
+    }: {
+      inline: boolean;
+      className: string;
+      children: React.ReactNode[];
+    }) => {
       const match = /language-(\w+)/.exec(className || "language-markdown");
       return !inline && match ? (
         <SyntaxHighlighter {...props} language={match[1]} PreTag="div">
@@ -61,9 +70,6 @@ export default function MarkdownRenderer({
 
   const _renderTextWithEntityLinksRegex = (textOrObject: string | Object) => {
     let textToProcess = textOrObject;
-    if (typeof textOrObject === "object") {
-      textToProcess = textOrObject.props.children[0];
-    }
 
     const splitText = (textToProcess as string).split(capitalizedWordRegex);
 
@@ -84,6 +90,7 @@ export default function MarkdownRenderer({
   };
 
   return (
+    //@ts-ignore
     <ReactMarkdown components={components} className={styles.lineBreak}>
       {content}
     </ReactMarkdown>
