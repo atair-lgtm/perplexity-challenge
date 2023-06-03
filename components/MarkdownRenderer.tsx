@@ -21,31 +21,24 @@ export default function MarkdownRenderer({
         if (typeof child === "object") {
           return child;
         }
-
         const text = child;
-
         const renderedWords =
           text && _renderTextWithEntityLinks(text as string);
-
         return renderedWords;
       });
-
       return <p>{processedChildren}</p>;
     },
     li: ({ children }: { children: React.ReactNode[] }) => {
       if (children === undefined) {
         return;
       }
-
       const childrenToProcess = children.filter((el) => el !== "\n");
-
       const processedChildren = childrenToProcess.map((child) => {
         if (typeof child === "object") {
           return child;
         }
         return _renderTextWithEntityLinks(child as string);
       });
-
       return <li>{processedChildren}</li>;
     },
     code: ({
@@ -59,6 +52,7 @@ export default function MarkdownRenderer({
       children: React.ReactNode[];
     }) => {
       const match = /language-(\w+)/.exec(className || "language-markdown");
+
       return !inline && match ? (
         <SyntaxHighlighter {...props} language={match[1]} PreTag="div">
           {String(children).replace(/\n$/, "")}

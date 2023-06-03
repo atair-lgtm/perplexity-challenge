@@ -18,6 +18,9 @@ export async function OpenAIStream({
   prevHistory: Query[];
 }) {
   let prevMessages: Message[] = [];
+  let counter = 0;
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
 
   prevHistory.forEach((query) => {
     prevMessages.push({ role: "user", content: query.userQuery });
@@ -50,9 +53,6 @@ export async function OpenAIStream({
     throw new Error("OpenAI API returned an error");
   }
 
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
-
   const stream = new ReadableStream({
     start: async (controller) => {
       function onParse(event: ParsedEvent | ReconnectInterval) {
@@ -67,9 +67,12 @@ export async function OpenAIStream({
           try {
             const json = JSON.parse(data);
             const text = json.choices[0].delta?.content || "";
-
+            if (counter < 2 && (text.match(/\n/) || []).length) {
+              return;
+            }
             const queue = encoder.encode(text);
             controller.enqueue(queue);
+            counter++;
           } catch (e) {
             controller.error(e);
           }

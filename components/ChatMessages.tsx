@@ -6,15 +6,24 @@ import { useRef, useEffect } from "react";
 export default function ChatMessages({
   queries,
   fetchAnswer,
+  isLoading,
 }: {
   queries: Query[];
   fetchAnswer: (query: string) => void;
+  isLoading: boolean;
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [queries]);
+
+  const _onEntityLinkClick = (content: string) => {
+    if (isLoading) {
+      return;
+    }
+    fetchAnswer(content);
+  };
 
   return (
     <div className={styles.chatMessages}>
@@ -25,14 +34,14 @@ export default function ChatMessages({
           </div>
 
           {query.response && (
-            <div className={styles.response} ref={bottomRef}>
+            <div className={styles.response}>
               <MarkdownRenderer
                 content={query.response}
-                onEntityLinkClick={(content) => fetchAnswer(content)}
+                onEntityLinkClick={_onEntityLinkClick}
               />
             </div>
           )}
-          <hr />
+          <div ref={bottomRef} />
         </div>
       ))}
     </div>

@@ -10,6 +10,13 @@
   flex-direction: column;
 }
 
+.queryAndResponse:not(:last-child) {
+    border: 0 solid #e5e7eb;
+    border-bottom-width: 1px;
+    border-color: lightgray;
+    padding-bottom: 5px;;
+}
+
 .userQuery {
   display: flex;
   justify-content: flex-start;
@@ -20,6 +27,12 @@
   border-style: solid;
   resize: none;
   word-break: break-word;
-  animation: fadeIn 500ms;
+  animation: fadeIn 600ms;
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  

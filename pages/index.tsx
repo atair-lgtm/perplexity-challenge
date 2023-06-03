@@ -50,31 +50,45 @@ export default function App() {
     setIsLoading(false);
   };
 
+  const isActive = queries.length > 0;
+
   return (
     <main className={styles.main}>
       <div className={styles.center}>
-        <h1>Perplexity</h1>
+        <h1>Perplexity Challenge</h1>
 
         <ChatMessages
           queries={queries}
+          isLoading={isLoading}
           fetchAnswer={(query) => fetchAnswer(query)}
         />
 
-        <div className={queries.length > 0 ? styles.footer : ""}>
+        <div className={isActive ? styles.footer : ""}>
           <UserTextArea
             fetchAnswer={(query) => fetchAnswer(query)}
-            placeholder={
-              queries.length > 0 ? "Ask follow-up" : "Ask anything..."
-            }
+            placeholder={isActive ? "Ask follow-up" : "Ask anything..."}
             isDisabled={isLoading}
           />
 
-          {queries.length > 0 ? (
+          {isActive ? (
             <button className={styles.clearButton} onClick={_onClickClear}>
               {"Clear chat"}
             </button>
           ) : null}
         </div>
+        {isActive ? null : (
+          <div className={styles.footer}>
+            <p>
+              Made by Abdul Al Tair.{" "}
+              <a
+                href="https://github.com/atair-lgtm/perplexity-challenge"
+                target="_blank"
+              >
+                Link to repo
+              </a>
+            </p>
+          </div>
+        )}
       </div>
     </main>
   );

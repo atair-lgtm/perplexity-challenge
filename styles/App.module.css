@@ -23,7 +23,7 @@
   flex-direction: column;
   align-items: center;
   position: fixed;
-  bottom: 20px;
+  bottom: 10px;
 }
 
 .clearButton {
@@ -31,7 +31,3 @@
   width: fit-content;;
 }
 
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}

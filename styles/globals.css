@@ -2,6 +2,6 @@ body{
     background-color: #edf1f6;;
 }
 
-p, ul {
+p, ul, li, ol {
     margin: 0;
 }
